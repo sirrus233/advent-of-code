@@ -1,0 +1,17 @@
+{
+    "cSpell.words": [
+        "aeiou",
+        "Combinators",
+        "concat",
+        "fmap",
+        "foldl",
+        "foldr",
+        "Hspec",
+        "mappend",
+        "metavar",
+        "santas",
+        "scanl",
+        "uncurry"
+    ],
+    "cSpell.ignorePaths": ["data"]
+}

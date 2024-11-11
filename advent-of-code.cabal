@@ -1,0 +1,63 @@
+cabal-version:      3.4
+name:               advent-of-code
+version:            0.1.0.0
+synopsis:           Solutions to puzzles from https://adventofcode.com
+-- description:
+license:            BSD-2-Clause
+license-file:       LICENSE
+author:             Bradley Sherman
+maintainer:         sirrus233@gmail.com
+-- copyright:
+build-type:         Simple
+extra-doc-files:    CHANGELOG.md
+-- extra-source-files:
+
+common common-options
+    ghc-options: -Wall
+    default-language: GHC2024
+
+common common-dependencies
+    build-depends:
+        base ^>=4.20.0.0,
+        text ^>=2.1.2,
+        bytestring ^>=0.12.1.0,
+        unordered-containers ^>=0.2.20,
+        containers ^>=0.7,
+        http-conduit ^>=2.3.9,
+        directory ^>=1.3.9.0,
+        optparse-applicative ^>=0.18.1.0,
+        parser-combinators ^>=1.3.0,
+        megaparsec ^>=9.6.1,
+        cryptohash-md5 ^>=0.11.100.1,
+
+common common-extensions
+    default-extensions:
+        OverloadedLists,
+        OverloadedRecordDot,
+        OverloadedStrings,
+
+library
+    import:           common-options, common-dependencies, common-extensions
+    exposed-modules:  Advent,
+                      NewSolution,
+                      Solutions.All,
+                      Solutions.Y2015.Day01,
+                      Solutions.Y2015.Day02,
+                      Solutions.Y2015.Day03,
+                      Solutions.Y2015.Day04,
+                      Solutions.Y2015.Day05,
+    hs-source-dirs:   src
+
+executable advent-of-code
+    import:           common-options, common-dependencies, common-extensions
+    main-is:          Main.hs
+    hs-source-dirs:   app
+    build-depends:    advent-of-code
+
+test-suite advent-of-code-test
+    import:           common-options, common-dependencies, common-extensions
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Main.hs
+    build-depends:    hspec ^>=2.11.9,
+                      advent-of-code
