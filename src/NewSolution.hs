@@ -30,7 +30,7 @@ writeTemplate :: SolutionId -> IO ()
 writeTemplate solutionId@(y, d, _) = writeFile path template
   where
     path = printf "src/Solutions/Y%d/Day%s.hs" y (dayString d)
-    template = moduleHeader <> commentHeader <> imports <> parser <> solutionFunction 1 <> solutionFunction 2
+    template = moduleHeader <> commentHeader <> imports <> parser <> solutionFunction 1 <> "\n" <> solutionFunction 2
 
     moduleHeader = printf "module Solutions.Y%d.Day%s (solution1, solution2) where\n\n" y (dayString d)
     commentHeader = "-- " <> problemUrl solutionId <> "\n\n"
