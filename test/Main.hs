@@ -8,7 +8,7 @@ import Test.Hspec (Expectation, describe, hspec, it, shouldBe)
 test :: SolutionId -> Integer -> Expectation
 test solutionId expected = do
   case Map.lookup solutionId solutions of
-    Nothing -> print $ "No solution found for " <> show solutionId
+    Nothing -> print $ "No solution found for " <> show @Text solutionId
     Just solution -> do
       input <- readInput solutionId
       solution input `shouldBe` Right expected

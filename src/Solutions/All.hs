@@ -1,7 +1,6 @@
 module Solutions.All where
 
 import Advent (Solution, SolutionId)
-import Data.HashMap.Strict (HashMap)
 import Solutions.Y2015.Day01 qualified as Y2015_01
 import Solutions.Y2015.Day02 qualified as Y2015_02
 import Solutions.Y2015.Day03 qualified as Y2015_03

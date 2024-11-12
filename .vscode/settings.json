@@ -11,6 +11,7 @@
         "metavar",
         "santas",
         "scanl",
+        "sconcat",
         "uncurry"
     ],
     "cSpell.ignorePaths": ["data"]

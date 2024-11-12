@@ -1,12 +1,6 @@
 module Advent where
 
-import Data.Functor.Identity (Identity)
-import Data.Kind (Type)
-import Data.Text (Text)
-import Data.Text.IO.Utf8 qualified as TIO
-import Data.Void (Void)
 import Text.Megaparsec (ParseErrorBundle, ParsecT)
-import Text.Printf (printf)
 
 type Year = Int
 
@@ -24,10 +18,10 @@ dayString :: Day -> String
 dayString d = if d < 10 then "0" <> show d else show d
 
 getInputFilename :: SolutionId -> String
-getInputFilename (y, d, _) = printf "data/%d/input%s.txt" y (dayString d)
+getInputFilename (y, d, _) = "data/" <> show y <> "/input" <> dayString d <> ".txt"
 
 readInput :: SolutionId -> IO Text
-readInput = TIO.readFile . getInputFilename
+readInput s = decodeUtf8 @Text <$> (readFileBS . getInputFilename $ s)
 
-length' :: forall (t :: Type -> Type) a. (Foldable t) => t a -> Integer
+length' :: (Foldable t) => t a -> Integer
 length' = fromIntegral . length

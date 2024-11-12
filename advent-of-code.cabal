@@ -19,16 +19,18 @@ common common-options
 common common-dependencies
     build-depends:
         base ^>=4.20.0.0,
-        text ^>=2.1.2,
-        bytestring ^>=0.12.1.0,
-        unordered-containers ^>=0.2.20,
-        containers ^>=0.7,
-        http-conduit ^>=2.3.9,
+        relude ^>=1.2.1.0,
         directory ^>=1.3.9.0,
+        http-conduit ^>=2.3.9,
         optparse-applicative ^>=0.18.1.0,
         parser-combinators ^>=1.3.0,
         megaparsec ^>=9.6.1,
         cryptohash-md5 ^>=0.11.100.1,
+
+    mixins:              
+        base hiding (Prelude),
+        relude (Relude as Prelude),
+        relude,
 
 common common-extensions
     default-extensions:
