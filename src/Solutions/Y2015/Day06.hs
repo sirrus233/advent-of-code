@@ -28,8 +28,8 @@ parser = ((,) <$> parseOp <* spaceChar <*> parseLightBox) `NE.sepEndBy1` eol <* 
     parseLight = (,) <$> L.decimal <* char ',' <*> L.decimal :: Parser Light
     parseLightBox = (,) <$> parseLight <* chunk " through " <*> parseLight :: Parser LightBox
 
-unboxLights :: LightBox -> NonEmpty Int
-unboxLights box = fromList [x + 1000 * y | x <- xs, y <- ys]
+unboxLights :: LightBox -> [Int]
+unboxLights box = [x + 1000 * y | x <- xs, y <- ys]
   where
     xs = [(fst . fst) box .. (fst . snd) box]
     ys = [(snd . fst) box .. (snd . snd) box]
