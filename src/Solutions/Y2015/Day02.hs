@@ -12,7 +12,7 @@ type Gift = (Integer, Integer, Integer)
 parser :: Parser (NonEmpty Gift)
 parser = gift `NE.sepEndBy1` eol <* eof
   where
-    gift = (,,) <$> L.decimal <* char 'x' <*> L.decimal <* char 'x' <*> L.decimal
+    gift = (,,) <$> L.decimal <* char 'x' <*> L.decimal <* char 'x' <*> L.decimal :: Parser Gift
 
 measureGift :: Gift -> Integer
 measureGift (l, w, h) = surfaceArea + smallestArea

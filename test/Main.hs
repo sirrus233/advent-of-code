@@ -26,3 +26,5 @@ main = hspec $ do
     it "Day 04.2" $ do test (2015, 4, 2) 9962624
     it "Day 05.1" $ do test (2015, 5, 1) 238
     it "Day 05.2" $ do test (2015, 5, 2) 69
+    it "Day 06.1" $ do test (2015, 6, 1) 569999
+    it "Day 06.2" $ do test (2015, 6, 2) 17836115

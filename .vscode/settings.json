@@ -3,6 +3,8 @@
         "aeiou",
         "Combinators",
         "concat",
+        "elems",
+        "flipfoldl",
         "fmap",
         "foldl",
         "foldr",
