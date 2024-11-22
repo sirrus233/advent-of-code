@@ -2,11 +2,11 @@ module Solutions.Y2015.Day06 (solution1, solution2) where
 
 -- https://adventofcode.com/2015/day/6
 
-import Advent (Parser, Solution)
+import Advent (Parser, Solution, lexeme, symbol)
 import Control.Applicative.Combinators.NonEmpty qualified as NE
-import Data.IntMap.Strict qualified as Map
-import Text.Megaparsec (chunk, eof, parse)
-import Text.Megaparsec.Char (char, eol, spaceChar)
+import Data.HashMap.Strict qualified as Map
+import Text.Megaparsec (parse)
+import Text.Megaparsec.Char (char)
 import Text.Megaparsec.Char.Lexer qualified as L
 
 data Operation = On | Off | Toggle
@@ -15,18 +15,18 @@ type Light = (Int, Int)
 
 type LightBox = (Light, Light)
 
-initialGrid :: IntMap Int
+initialGrid :: HashMap Int Int
 initialGrid = Map.fromList $ map (,0) [0 .. 999999]
 
 parser :: Parser (NonEmpty (Operation, LightBox))
-parser = ((,) <$> parseOp <* spaceChar <*> parseLightBox) `NE.sepEndBy1` eol <* eof
+parser = NE.some ((,) <$> op <*> lightBox)
   where
-    parseOn = chunk "turn on" >> pure On :: Parser Operation
-    parseOff = chunk "turn off" >> pure Off :: Parser Operation
-    parseToggle = chunk "toggle" >> pure Toggle :: Parser Operation
-    parseOp = parseOn <|> parseOff <|> parseToggle :: Parser Operation
-    parseLight = (,) <$> L.decimal <* char ',' <*> L.decimal :: Parser Light
-    parseLightBox = (,) <$> parseLight <* chunk " through " <*> parseLight :: Parser LightBox
+    turnOn = symbol "turn on" >> pure On :: Parser Operation
+    turnOff = symbol "turn off" >> pure Off :: Parser Operation
+    toggle = symbol "toggle" >> pure Toggle :: Parser Operation
+    op = turnOn <|> turnOff <|> toggle :: Parser Operation
+    light = (,) <$> lexeme L.decimal <* char ',' <*> lexeme L.decimal :: Parser Light
+    lightBox = (,) <$> light <* symbol "through" <*> light :: Parser LightBox
 
 unboxLights :: LightBox -> [Int]
 unboxLights box = [x + 1000 * y | x <- xs, y <- ys]
@@ -46,7 +46,7 @@ getOp2 op = case op of
   Off -> max 0 . subtract 1
   Toggle -> (+) 2
 
-updateGrid :: (Operation -> (Int -> Int)) -> IntMap Int -> (Operation, LightBox) -> IntMap Int
+updateGrid :: (Operation -> (Int -> Int)) -> HashMap Int Int -> (Operation, LightBox) -> HashMap Int Int
 updateGrid updater grid (op, box) = flipfoldl' (Map.adjust (updater op)) grid (unboxLights box)
 
 solution1 :: Solution

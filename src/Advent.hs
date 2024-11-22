@@ -1,6 +1,8 @@
 module Advent where
 
 import Text.Megaparsec (ParseErrorBundle, ParsecT)
+import Text.Megaparsec.Char (space1)
+import Text.Megaparsec.Char.Lexer qualified as L
 
 type Year = Int
 
@@ -22,6 +24,15 @@ getInputFilename (y, d, _) = "data/" <> show y <> "/input" <> dayString d <> ".t
 
 readInput :: SolutionId -> IO Text
 readInput s = decodeUtf8 @Text <$> (readFileBS . getInputFilename $ s)
+
+spaceConsumer :: Parser ()
+spaceConsumer = L.space space1 empty empty
+
+lexeme :: Parser a -> Parser a
+lexeme = L.lexeme spaceConsumer
+
+symbol :: Text -> Parser Text
+symbol = L.symbol spaceConsumer
 
 length' :: (Foldable t) => t a -> Integer
 length' = fromIntegral . length

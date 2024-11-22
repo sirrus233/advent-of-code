@@ -49,6 +49,7 @@ library
                       Solutions.Y2015.Day04,
                       Solutions.Y2015.Day05,
                       Solutions.Y2015.Day06,
+                      Solutions.Y2015.Day07,
     hs-source-dirs:   src
 
 executable advent-of-code
