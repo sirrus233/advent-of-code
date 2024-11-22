@@ -6,6 +6,7 @@ import Advent (Parser, Solution, lexeme, symbol)
 import Data.Bits (complement, shiftL, shiftR, (.&.), (.|.))
 import Data.HashMap.Strict qualified as Map
 import Data.List.NonEmpty qualified as NE
+import Data.Maybe (fromJust)
 import Text.Megaparsec (parse, try)
 import Text.Megaparsec.Char (lowerChar)
 import Text.Megaparsec.Char.Lexer qualified as L
@@ -38,20 +39,39 @@ parser = NE.some1 (flip (,) <$> gate <* symbol "->" <*> wire)
     rShiftGate = try $ RShift <$> wire <* symbol "RSHIFT" <*> lexeme L.decimal :: Parser LogicGate
     buffer = Buffer <$> wire :: Parser LogicGate
 
-evaluate :: Wire -> Circuit -> Word16
-evaluate (Value a) _ = a
-evaluate wire circuit = evalGate . fromMaybe (Buffer . Value $ 0) . Map.lookup wire $ circuit
+propagate :: Circuit -> Circuit
+propagate circuit = Map.map evalGate circuit
   where
-    evalGate :: LogicGate -> Word16
-    evalGate (Not w) = complement $ evaluate w circuit
-    evalGate (And w1 w2) = evaluate w1 circuit .&. evaluate w2 circuit
-    evalGate (Or w1 w2) = evaluate w1 circuit .|. evaluate w2 circuit
-    evalGate (LShift w n) = flip shiftL n $ evaluate w circuit
-    evalGate (RShift w n) = flip shiftR n $ evaluate w circuit
-    evalGate (Buffer w) = evaluate w circuit
+    probe :: Wire -> Maybe Word16
+    probe (Value a) = Just a
+    probe wire = case Map.lookup wire circuit of
+      Just (Buffer (Value a)) -> Just a
+      _ -> Nothing
+
+    evalGate :: LogicGate -> LogicGate
+    evalGate gate = case gate of
+      (Not w) -> eval $ complement <$> probe w
+      (And w1 w2) -> eval $ (.&.) <$> probe w1 <*> probe w2
+      (Or w1 w2) -> eval $ (.|.) <$> probe w1 <*> probe w2
+      (LShift w n) -> eval $ (`shiftL` n) <$> probe w
+      (RShift w n) -> eval $ (`shiftR` n) <$> probe w
+      (Buffer w) -> eval $ probe w
+      where
+        eval = maybe gate (Buffer . Value)
+
+readSteadyState :: String -> [Circuit] -> Word16
+readSteadyState label cs = fromJust . getSteady . Map.lookup (Label label) $ steadyState
+  where
+    isSteady (Just (Buffer (Value _))) = True
+    isSteady _ = False
+
+    steadyState = head . fromList . dropWhile (not . isSteady . Map.lookup (Label label)) $ cs
+
+    getSteady (Just (Buffer (Value a))) = Just a
+    getSteady _ = Nothing
 
 solution1 :: Solution
-solution1 input = fromIntegral . evaluate (Label "c") . fromList . toList <$> parse parser "" input
+solution1 input = fromIntegral . readSteadyState "a" . iterate propagate . fromList . toList <$> parse parser "" input
 
 solution2 :: Solution
-solution2 input = 0 <$ parse parser "" input
+solution2 input = fromIntegral . readSteadyState "a" . iterate propagate . Map.adjust (const $ Buffer . Value $ 3176) (Label "b") . fromList . toList <$> parse parser "" input
