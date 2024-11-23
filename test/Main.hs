@@ -30,3 +30,6 @@ main = hspec $ do
     it "Day 06.2" $ do test (2015, 6, 2) 17836115
     it "Day 07.1" $ do test (2015, 7, 1) 3176
     it "Day 07.2" $ do test (2015, 7, 2) 14710
+  describe "Year 2019" $ do
+    it "Day 02.1" $ do test (2019, 2, 1) 3409710
+    it "Day 02.2" $ do test (2019, 2, 2) 7912
