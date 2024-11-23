@@ -39,39 +39,41 @@ parser = NE.some1 (flip (,) <$> gate <* symbol "->" <*> wire)
     rShiftGate = try $ RShift <$> wire <* symbol "RSHIFT" <*> lexeme L.decimal :: Parser LogicGate
     buffer = Buffer <$> wire :: Parser LogicGate
 
-propagate :: Circuit -> Circuit
-propagate circuit = Map.map evalGate circuit
+probe :: Wire -> Circuit -> Maybe Word16
+probe (Value a) _ = Just a
+probe wire circuit = case Map.lookup wire circuit of
+  Just (Buffer (Value a)) -> Just a
+  _ -> Nothing
+
+simulate :: Circuit -> Circuit
+simulate circuit -- = Map.map evalGate circuit
+  | all isSteady $ Map.elems circuit = circuit
+  | otherwise = simulate $ evalGate <$> circuit
   where
-    probe :: Wire -> Maybe Word16
-    probe (Value a) = Just a
-    probe wire = case Map.lookup wire circuit of
-      Just (Buffer (Value a)) -> Just a
-      _ -> Nothing
+    isSteady :: LogicGate -> Bool
+    isSteady (Buffer (Value _)) = True
+    isSteady _ = False
 
     evalGate :: LogicGate -> LogicGate
     evalGate gate = case gate of
-      (Not w) -> eval $ complement <$> probe w
-      (And w1 w2) -> eval $ (.&.) <$> probe w1 <*> probe w2
-      (Or w1 w2) -> eval $ (.|.) <$> probe w1 <*> probe w2
-      (LShift w n) -> eval $ (`shiftL` n) <$> probe w
-      (RShift w n) -> eval $ (`shiftR` n) <$> probe w
-      (Buffer w) -> eval $ probe w
+      (Not w) -> eval $ complement <$> probe' w
+      (And w1 w2) -> eval $ (.&.) <$> probe' w1 <*> probe' w2
+      (Or w1 w2) -> eval $ (.|.) <$> probe' w1 <*> probe' w2
+      (LShift w n) -> eval $ (`shiftL` n) <$> probe' w
+      (RShift w n) -> eval $ (`shiftR` n) <$> probe' w
+      (Buffer w) -> eval $ probe' w
       where
+        probe' = flip probe circuit
         eval = maybe gate (Buffer . Value)
 
-readSteadyState :: String -> [Circuit] -> Word16
-readSteadyState label cs = fromJust . getSteady . Map.lookup (Label label) $ steadyState
-  where
-    isSteady (Just (Buffer (Value _))) = True
-    isSteady _ = False
-
-    steadyState = head . fromList . dropWhile (not . isSteady . Map.lookup (Label label)) $ cs
-
-    getSteady (Just (Buffer (Value a))) = Just a
-    getSteady _ = Nothing
+solveForLabel :: String -> Circuit -> Word16
+solveForLabel label = fromJust . probe (Label label) . simulate
 
 solution1 :: Solution
-solution1 input = fromIntegral . readSteadyState "a" . iterate propagate . fromList . toList <$> parse parser "" input
+solution1 input = fromIntegral . solveForLabel "a" . fromList . toList <$> parse parser "" input
 
 solution2 :: Solution
-solution2 input = fromIntegral . readSteadyState "a" . iterate propagate . Map.adjust (const $ Buffer . Value $ 3176) (Label "b") . fromList . toList <$> parse parser "" input
+solution2 input = do
+  circuit <- fromList . toList <$> parse parser "" input
+  let a = solveForLabel "a" circuit
+  pure . fromIntegral . solveForLabel "a" . Map.insert (Label "b") (Buffer . Value $ a) $ circuit
