@@ -5,7 +5,6 @@ module Solutions.Y2015.Day07 (solution1, solution2) where
 import Advent (Parser, Solution, lexeme, symbol)
 import Data.Bits (complement, shiftL, shiftR, (.&.), (.|.))
 import Data.HashMap.Strict qualified as Map
-import Data.List.NonEmpty qualified as NE
 import Data.Maybe (fromJust)
 import Text.Megaparsec (parse, try)
 import Text.Megaparsec.Char (lowerChar)
@@ -15,8 +14,6 @@ data Wire = Value Word16 | Label String deriving (Eq)
 
 data LogicGate = Not Wire | And Wire Wire | Or Wire Wire | LShift Wire Int | RShift Wire Int | Buffer Wire
 
-type Connection = (Wire, LogicGate)
-
 type Circuit = HashMap Wire LogicGate
 
 instance Hashable Wire where
@@ -24,8 +21,8 @@ instance Hashable Wire where
   hashWithSalt s (Value a) = hashWithSalt s a
   hashWithSalt s (Label a) = hashWithSalt s a
 
-parser :: Parser (NonEmpty Connection)
-parser = NE.some1 (flip (,) <$> gate <* symbol "->" <*> wire)
+parser :: Parser Circuit
+parser = fromList <$> some (flip (,) <$> gate <* symbol "->" <*> wire)
   where
     wire = lexeme (value <|> label) :: Parser Wire
     gate = lexeme (notGate <|> andGate <|> orGate <|> lShiftGate <|> rShiftGate <|> buffer) :: Parser LogicGate
@@ -46,7 +43,7 @@ probe wire circuit = case Map.lookup wire circuit of
   _ -> Nothing
 
 simulate :: Circuit -> Circuit
-simulate circuit -- = Map.map evalGate circuit
+simulate circuit
   | all isSteady $ Map.elems circuit = circuit
   | otherwise = simulate $ evalGate <$> circuit
   where
@@ -69,11 +66,13 @@ simulate circuit -- = Map.map evalGate circuit
 solveForLabel :: String -> Circuit -> Word16
 solveForLabel label = fromJust . probe (Label label) . simulate
 
+updateFromSteadyLabel :: String -> String -> Circuit -> Circuit
+updateFromSteadyLabel fromWire toWire circuit = Map.insert (Label toWire) (Buffer . Value $ updateSignal) circuit
+  where
+    updateSignal = solveForLabel fromWire circuit
+
 solution1 :: Solution
-solution1 input = fromIntegral . solveForLabel "a" . fromList . toList <$> parse parser "" input
+solution1 input = fromIntegral . solveForLabel "a" <$> parse parser "" input
 
 solution2 :: Solution
-solution2 input = do
-  circuit <- fromList . toList <$> parse parser "" input
-  let a = solveForLabel "a" circuit
-  pure . fromIntegral . solveForLabel "a" . Map.insert (Label "b") (Buffer . Value $ a) $ circuit
+solution2 input = fromIntegral . solveForLabel "a" . updateFromSteadyLabel "a" "b" <$> parse parser "" input
