@@ -10,7 +10,7 @@ import Text.Megaparsec (parse, try)
 import Text.Megaparsec.Char (lowerChar)
 import Text.Megaparsec.Char.Lexer qualified as L
 
-data Wire = Value Word16 | Label String deriving (Eq)
+data Wire = Value Word16 | Label Text deriving (Eq)
 
 data LogicGate = Not Wire | And Wire Wire | Or Wire Wire | LShift Wire Int | RShift Wire Int | Buffer Wire
 
@@ -28,7 +28,7 @@ parser = fromList <$> some (flip (,) <$> gate <* symbol "->" <*> wire)
     gate = lexeme (notGate <|> andGate <|> orGate <|> lShiftGate <|> rShiftGate <|> buffer) :: Parser LogicGate
 
     value = Value <$> lexeme L.decimal :: Parser Wire
-    label = Label <$> lexeme (some lowerChar) :: Parser Wire
+    label = Label <$> lexeme (toText <$> some lowerChar) :: Parser Wire
     notGate = Not <$> (symbol "NOT" *> wire) :: Parser LogicGate
     andGate = try $ And <$> wire <* symbol "AND" <*> wire :: Parser LogicGate
     orGate = try $ Or <$> wire <* symbol "OR" <*> wire :: Parser LogicGate
@@ -63,10 +63,10 @@ simulate circuit
         probe' = flip probe circuit
         eval = maybe gate (Buffer . Value)
 
-solveForLabel :: String -> Circuit -> Word16
+solveForLabel :: Text -> Circuit -> Word16
 solveForLabel label = fromJust . probe (Label label) . simulate
 
-updateFromSteadyLabel :: String -> String -> Circuit -> Circuit
+updateFromSteadyLabel :: Text -> Text -> Circuit -> Circuit
 updateFromSteadyLabel fromWire toWire circuit = Map.insert (Label toWire) (Buffer . Value $ updateSignal) circuit
   where
     updateSignal = solveForLabel fromWire circuit
