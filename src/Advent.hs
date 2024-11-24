@@ -14,7 +14,9 @@ type SolutionId = (Year, Day, Problem)
 
 type Parser a = ParsecT Void Text Identity a
 
-type Solution = Text -> Either (ParseErrorBundle Text Void) Integer
+type Solution a = Text -> Either (ParseErrorBundle Text Void) a
+
+data AnySolution = forall a. (Integral a) => AnySolution (Solution a)
 
 dayString :: Day -> String
 dayString d = if d < 10 then "0" <> show d else show d
@@ -33,6 +35,3 @@ lexeme = L.lexeme spaceConsumer
 
 symbol :: Text -> Parser Text
 symbol = L.symbol spaceConsumer
-
-length' :: (Foldable t) => t a -> Integer
-length' = fromIntegral . length

@@ -49,8 +49,8 @@ getOp2 op = case op of
 updateGrid :: (Operation -> (Int -> Int)) -> HashMap Int Int -> (Operation, LightBox) -> HashMap Int Int
 updateGrid updater grid (op, box) = flipfoldl' (Map.adjust (updater op)) grid (unboxLights box)
 
-solution1 :: Solution
-solution1 input = fromIntegral . sum . Map.elems . foldl' (updateGrid getOp1) initialGrid <$> parse parser "" input
+solution1 :: Solution Int
+solution1 input = sum . Map.elems . foldl' (updateGrid getOp1) initialGrid <$> parse parser "" input
 
-solution2 :: Solution
-solution2 input = fromIntegral . sum . Map.elems . foldl' (updateGrid getOp2) initialGrid <$> parse parser "" input
+solution2 :: Solution Int
+solution2 input = sum . Map.elems . foldl' (updateGrid getOp2) initialGrid <$> parse parser "" input

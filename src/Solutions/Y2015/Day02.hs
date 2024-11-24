@@ -7,14 +7,14 @@ import Text.Megaparsec (eof, parse)
 import Text.Megaparsec.Char (char, eol)
 import Text.Megaparsec.Char.Lexer qualified as L
 
-type Gift = (Integer, Integer, Integer)
+type Gift = (Int, Int, Int)
 
 parser :: Parser (NonEmpty Gift)
 parser = gift `NE.sepEndBy1` eol <* eof
   where
     gift = (,,) <$> L.decimal <* char 'x' <*> L.decimal <* char 'x' <*> L.decimal :: Parser Gift
 
-measureGift :: Gift -> Integer
+measureGift :: Gift -> Int
 measureGift (l, w, h) = surfaceArea + smallestArea
   where
     area1 = l * w
@@ -23,7 +23,7 @@ measureGift (l, w, h) = surfaceArea + smallestArea
     surfaceArea = 2 * (area1 + area2 + area3)
     smallestArea = minimum $ area1 :| [area2, area3]
 
-measureRibbon :: Gift -> Integer
+measureRibbon :: Gift -> Int
 measureRibbon (l, w, h) = smallestPerimeter + volume
   where
     perimeter1 = 2 * (l + w)
@@ -32,8 +32,8 @@ measureRibbon (l, w, h) = smallestPerimeter + volume
     smallestPerimeter = minimum $ perimeter1 :| [perimeter2, perimeter3]
     volume = l * w * h
 
-solution1 :: Solution
+solution1 :: Solution Int
 solution1 input = sum . fmap measureGift <$> parse parser "" input
 
-solution2 :: Solution
+solution2 :: Solution Int
 solution2 input = sum . fmap measureRibbon <$> parse parser "" input

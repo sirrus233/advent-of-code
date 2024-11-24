@@ -49,8 +49,8 @@ findTarget target programs = case NE.filter ((==) target . head) programs of
   ((_ :| n : v : _) : _) -> Just $ 100 * n + v
   _ -> Nothing
 
-solution1 :: Solution
-solution1 input = fromIntegral . head . execProgram . initialize 12 2 <$> parse parser "" input
+solution1 :: Solution Int
+solution1 input = head . execProgram . initialize 12 2 <$> parse parser "" input
 
-solution2 :: Solution
-solution2 input = fromIntegral . fromJust . findTarget 19690720 . execAll <$> parse parser "" input
+solution2 :: Solution Int
+solution2 input = fromJust . findTarget 19690720 . execAll <$> parse parser "" input

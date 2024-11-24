@@ -40,8 +40,8 @@ shortestRoute optimizer g = optimizer . traverseAll (const 0) . fromList . Map.k
       | null unvisited = d
       | otherwise = optimizer . traverseAll ((d +) . distance g current) $ unvisited
 
-solution1 :: Solution
-solution1 input = fromIntegral . shortestRoute minimum <$> parse parser "" input
+solution1 :: Solution Int
+solution1 input = shortestRoute minimum <$> parse parser "" input
 
-solution2 :: Solution
-solution2 input = fromIntegral . shortestRoute maximum <$> parse parser "" input
+solution2 :: Solution Int
+solution2 input = shortestRoute maximum <$> parse parser "" input

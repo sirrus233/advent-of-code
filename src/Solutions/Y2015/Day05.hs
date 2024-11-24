@@ -2,7 +2,7 @@ module Solutions.Y2015.Day05 (solution1, solution2) where
 
 -- https://adventofcode.com/2015/day/5
 
-import Advent (Parser, Solution, length')
+import Advent (Parser, Solution)
 import Control.Applicative.Combinators.NonEmpty qualified as NE
 import Control.Monad (foldM)
 import Data.HashMap.Strict qualified as Map
@@ -37,8 +37,8 @@ isNice2 str = duplicatedPair str && separatedDouble str
             | otherwise -> Right ps
     separatedDouble s = any (uncurry (==)) $ zip (toList s) (NE.drop 2 s)
 
-solution1 :: Solution
-solution1 input = length' . NE.filter isNice1 <$> parse parser "" input
+solution1 :: Solution Int
+solution1 input = length . NE.filter isNice1 <$> parse parser "" input
 
-solution2 :: Solution
-solution2 input = length' . NE.filter isNice2 <$> parse parser "" input
+solution2 :: Solution Int
+solution2 input = length . NE.filter isNice2 <$> parse parser "" input

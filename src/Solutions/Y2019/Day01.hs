@@ -20,8 +20,8 @@ recursiveFuel mass
   where
     fuel = singleFuel mass
 
-solution1 :: Solution
-solution1 input = fromIntegral . sum . fmap singleFuel <$> parse parser "" input
+solution1 :: Solution Int
+solution1 input = sum . fmap singleFuel <$> parse parser "" input
 
-solution2 :: Solution
-solution2 input = fromIntegral . sum . fmap recursiveFuel <$> parse parser "" input
+solution2 :: Solution Int
+solution2 input = sum . fmap recursiveFuel <$> parse parser "" input

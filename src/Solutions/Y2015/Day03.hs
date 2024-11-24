@@ -1,12 +1,12 @@
 module Solutions.Y2015.Day03 (solution1, solution2) where
 
-import Advent (Parser, Solution, length')
+import Advent (Parser, Solution)
 import Control.Applicative.Combinators.NonEmpty qualified as NE
 import Data.List.NonEmpty qualified as NE
 import Text.Megaparsec (eof, parse)
 import Text.Megaparsec.Char (char)
 
-type Position = (Integer, Integer)
+type Position = (Int, Int)
 
 type Move = Position -> Position
 
@@ -27,8 +27,8 @@ houses santas = sconcat . NE.scanl move initialPositions
     initialPosition = (0, 0)
     initialPositions = initialPosition :| replicate (santas - 1) initialPosition
 
-solution1 :: Solution
-solution1 input = length' . hashNub . toList . houses 1 <$> parse parser "" input
+solution1 :: Solution Int
+solution1 input = length . hashNub . toList . houses 1 <$> parse parser "" input
 
-solution2 :: Solution
-solution2 input = length' . hashNub . toList . houses 2 <$> parse parser "" input
+solution2 :: Solution Int
+solution2 input = length . hashNub . toList . houses 2 <$> parse parser "" input

@@ -33,8 +33,8 @@ parser2 = sum <$> NE.some1 line <* eof
 originalCodeLength :: Text -> Int
 originalCodeLength = sum . map T.length . lines
 
-solution1 :: Solution
-solution1 input = fromIntegral . (-) (originalCodeLength input) <$> parse parser1 "" input
+solution1 :: Solution Int
+solution1 input = (-) (originalCodeLength input) <$> parse parser1 "" input
 
-solution2 :: Solution
-solution2 input = fromIntegral . subtract (originalCodeLength input) <$> parse parser2 "" input
+solution2 :: Solution Int
+solution2 input = subtract (originalCodeLength input) <$> parse parser2 "" input

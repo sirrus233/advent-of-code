@@ -39,10 +39,10 @@ writeTemplate solutionId@(y, d, _) = writeFile path template
       \import Control.Applicative.Combinators.NonEmpty qualified as NE\n\
       \import Data.List.NonEmpty qualified as NE\n\
       \import Text.Megaparsec (parse)\n\n"
-    parser = "parser :: Parser Integer\nparser = pure 0\n\n"
+    parser = "parser :: Parser Int\nparser = pure 0\n\n"
     solutionFunction :: Int -> String
     solutionFunction n =
-      printf "solution%d :: Solution\nsolution%d input = 0 <$ parse parser \"\" input\n" n n
+      printf "solution%d :: Solution Int\nsolution%d input = const 0 <$> parse parser \"\" input\n" n n
 
 getExistingSolutions :: IO [SolutionId]
 getExistingSolutions = do
@@ -63,9 +63,9 @@ writeRegistry = getExistingSolutions >>= writeFile path . registryModule
     registryModule ss = moduleHeader <> adventImport <> solutionImports ss <> "\n" <> solutionsDict ss
 
     moduleHeader = "module Solutions.All where\n\n"
-    adventImport = "import Advent (Solution, SolutionId)\n"
+    adventImport = "import Advent (AnySolution (..), SolutionId)\n"
     solutionImports = concat . hashNub . map solutionImport
-    dictPre = "solutions :: HashMap SolutionId Solution\nsolutions =\n  [ "
+    dictPre = "solutions :: HashMap SolutionId AnySolution\nsolutions =\n  [ "
     dictEntries = intercalate ",\n    " . map dictEntry
     dictPost = "\n  ]"
 
@@ -76,7 +76,7 @@ writeRegistry = getExistingSolutions >>= writeFile path . registryModule
       printf "import Solutions.Y%d.Day%s qualified as %s\n" y (dayString d) (qualifier solutionId)
     dictEntry :: SolutionId -> String
     dictEntry solutionId@(y, d, p) =
-      printf "((%d, %s, %d), %s.solution%d)" y (dayString d) p (qualifier solutionId) p
+      printf "((%d, %s, %d), AnySolution %s.solution%d)" y (dayString d) p (qualifier solutionId) p
 
 writeCabal :: SolutionId -> IO ()
 writeCabal (y, d, _) = readFileBS path >>= (writeFileText path . cabalContents) . decodeUtf8

@@ -1,6 +1,6 @@
 module Main where
 
-import Advent (Day, Problem, SolutionId, Year, readInput)
+import Advent (AnySolution (..), Day, Problem, SolutionId, Year, readInput)
 import Control.Exception (IOException, try)
 import Data.HashMap.Strict qualified as Map
 import NewSolution (newSolution)
@@ -36,13 +36,13 @@ printSolvedProblem :: SolutionId -> IO ()
 printSolvedProblem solutionId = do
   case Map.lookup solutionId solutions of
     Nothing -> print $ "No solution found for " <> show @Text solutionId
-    Just solution -> do
+    Just (AnySolution solution) -> do
       inputOrExc <- try $ readInput solutionId :: IO (Either IOException Text)
       case inputOrExc of
         Left err -> print err
         Right input -> case solution input of
           Left err -> print err
-          Right n -> print n
+          Right n -> print (fromIntegral n :: Integer)
 
 main :: IO ()
 main = do
