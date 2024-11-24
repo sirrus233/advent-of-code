@@ -53,6 +53,7 @@ library
                       Solutions.Y2019.Day02,
                       Solutions.Y2015.Day08,
                       Solutions.Y2015.Day09,
+                      Solutions.Y2019.Day01,
     hs-source-dirs:   src
 
 executable advent-of-code
