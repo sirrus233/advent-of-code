@@ -22,7 +22,8 @@ parser :: Parser Program
 parser = L.decimal `NE.sepEndBy1` char ','
 
 initialize :: Noun -> Verb -> Program -> Program
-initialize noun verb (output :| program) = output :| noun : verb : drop 2 program
+initialize noun verb (output :| _ : _ : program) = output :| noun : verb : program
+initialize _ _ p = p
 
 execProgram :: Program -> Program
 execProgram = go 0
