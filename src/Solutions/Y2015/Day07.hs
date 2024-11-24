@@ -71,8 +71,8 @@ updateFromSteadyLabel fromWire toWire circuit = Map.insert (Label toWire) (Buffe
   where
     updateSignal = solveForLabel fromWire circuit
 
-solution1 :: Solution Int
-solution1 input = fromIntegral . solveForLabel "a" <$> parse parser "" input
+solution1 :: Solution Word16
+solution1 input = solveForLabel "a" <$> parse parser "" input
 
-solution2 :: Solution Int
-solution2 input = fromIntegral . solveForLabel "a" . updateFromSteadyLabel "a" "b" <$> parse parser "" input
+solution2 :: Solution Word16
+solution2 input = solveForLabel "a" . updateFromSteadyLabel "a" "b" <$> parse parser "" input
