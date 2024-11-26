@@ -35,3 +35,6 @@ lexeme = L.lexeme spaceConsumer
 
 symbol :: Text -> Parser Text
 symbol = L.symbol spaceConsumer
+
+applyN :: Int -> (a -> a) -> a -> a
+applyN n f = foldr (.) id (replicate n f)

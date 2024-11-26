@@ -34,6 +34,7 @@ common common-dependencies
 
 common common-extensions
     default-extensions:
+        MonadComprehensions,
         OverloadedLists,
         OverloadedRecordDot,
         OverloadedStrings,
