@@ -3,11 +3,11 @@ module Solutions.Y2015.Day01 (solution1, solution2) where
 import Advent (Parser, Solution)
 import Control.Applicative.Combinators.NonEmpty qualified as NE
 import Data.List.NonEmpty qualified as NE
-import Text.Megaparsec (eof, parse)
+import Text.Megaparsec (parse)
 import Text.Megaparsec.Char (char)
 
 parser :: Parser (NonEmpty Int)
-parser = NE.some (goingUp <|> goingDown) <* eof
+parser = NE.some (goingUp <|> goingDown)
   where
     goingUp = char '(' >> pure 1 :: Parser Int
     goingDown = char ')' >> pure (-1) :: Parser Int

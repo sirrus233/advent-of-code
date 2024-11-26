@@ -1,18 +1,18 @@
 module Solutions.Y2015.Day02 (solution1, solution2) where
 
-import Advent (Parser, Solution)
+import Advent (Parser, Solution, lexeme)
 import Control.Applicative.Combinators.NonEmpty qualified as NE
 import Data.Foldable (minimum)
-import Text.Megaparsec (eof, parse)
-import Text.Megaparsec.Char (char, eol)
+import Text.Megaparsec (parse)
+import Text.Megaparsec.Char (char)
 import Text.Megaparsec.Char.Lexer qualified as L
 
 type Gift = (Int, Int, Int)
 
 parser :: Parser (NonEmpty Gift)
-parser = gift `NE.sepEndBy1` eol <* eof
+parser = NE.some gift
   where
-    gift = (,,) <$> L.decimal <* char 'x' <*> L.decimal <* char 'x' <*> L.decimal :: Parser Gift
+    gift = lexeme $ (,,) <$> L.decimal <* char 'x' <*> L.decimal <* char 'x' <*> L.decimal :: Parser Gift
 
 measureGift :: Gift -> Int
 measureGift (l, w, h) = surfaceArea + smallestArea

@@ -13,7 +13,7 @@ parser :: Parser (NonEmpty Int)
 parser = fmap digitToInt <$> NE.some digitChar
 
 lookAndSay :: NonEmpty Int -> NonEmpty Int
-lookAndSay digits = NE.group1 digits >>= \ds -> length ds :| [head ds]
+lookAndSay = sconcat . fmap (\ds -> length ds :| [head ds]) . NE.group1
 
 solution1 :: Solution Int
 solution1 input = length . applyN 40 lookAndSay <$> parse parser "" input
