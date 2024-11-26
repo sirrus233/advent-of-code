@@ -6,10 +6,10 @@ import Advent (Parser, Solution, lexeme)
 import Crypto.Hash.MD5 (hash)
 import Data.ByteString qualified as BS
 import Text.Megaparsec (parse)
-import Text.Megaparsec.Char.Lexer qualified as L
+import Text.Megaparsec.Char (letterChar)
 
 parser :: Parser ByteString
-parser = encodeUtf8 . toText <$> some (lexeme L.charLiteral)
+parser = encodeUtf8 . toText <$> lexeme (some letterChar)
 
 encodeInteger :: Int -> ByteString
 encodeInteger = encodeUtf8 @Text . show
