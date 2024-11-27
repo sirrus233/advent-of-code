@@ -42,7 +42,7 @@ printSolvedProblem solutionId = do
         Left err -> print err
         Right input -> case solution input of
           Left err -> print err
-          Right n -> print (fromIntegral n :: Integer)
+          Right n -> putStrLn (show n :: String)
 
 main :: IO ()
 main = do

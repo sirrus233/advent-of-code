@@ -16,7 +16,7 @@ type Parser a = ParsecT Void Text Identity a
 
 type Solution a = Text -> Either (ParseErrorBundle Text Void) a
 
-data AnySolution = forall a. (Integral a) => AnySolution (Solution a)
+data AnySolution = forall a. (Typeable a, Eq a, Show a) => AnySolution (Solution a)
 
 dayString :: Day -> String
 dayString d = if d < 10 then "0" <> show d else show d
