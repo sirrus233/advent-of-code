@@ -34,20 +34,20 @@ unboxLights box = [x + 1000 * y | x <- xs, y <- ys]
     xs = [(fst . fst) box .. (fst . snd) box]
     ys = [(snd . fst) box .. (snd . snd) box]
 
+updateGrid :: (Operation -> (Int -> Int)) -> HashMap Int Int -> (Operation, LightBox) -> HashMap Int Int
+updateGrid updater grid (op, box) = flipfoldl' (Map.adjust (updater op)) grid (unboxLights box)
+
 getOp1 :: Operation -> (Int -> Int)
-getOp1 op = case op of
+getOp1 = \case
   On -> const 1
   Off -> const 0
   Toggle -> \a -> if a == 0 then 1 else 0
 
 getOp2 :: Operation -> (Int -> Int)
-getOp2 op = case op of
+getOp2 = \case
   On -> (+) 1
   Off -> max 0 . subtract 1
   Toggle -> (+) 2
-
-updateGrid :: (Operation -> (Int -> Int)) -> HashMap Int Int -> (Operation, LightBox) -> HashMap Int Int
-updateGrid updater grid (op, box) = flipfoldl' (Map.adjust (updater op)) grid (unboxLights box)
 
 solution1 :: Solution Int
 solution1 input = sum . Map.elems . foldl' (updateGrid getOp1) initialGrid <$> parse parser "" input

@@ -68,6 +68,7 @@ test-suite advent-of-code-test
     import:           common-options, common-dependencies, common-extensions
     type:             exitcode-stdio-1.0
     hs-source-dirs:   test
+    ghc-options:      -threaded -with-rtsopts=-N
     main-is:          Main.hs
     build-depends:    hspec ^>=2.11.9,
                       advent-of-code

@@ -3,7 +3,7 @@ module Main (main) where
 import Advent (AnySolution (..), SolutionId, readInput)
 import Data.HashMap.Strict qualified as Map
 import Solutions.All (solutions)
-import Test.Hspec (Expectation, describe, hspec, it, shouldBe)
+import Test.Hspec (Expectation, describe, hspec, it, parallel, shouldBe)
 
 test :: SolutionId -> Integer -> Expectation
 test solutionId expected = do
@@ -14,7 +14,7 @@ test solutionId expected = do
       (fromIntegral <$> solution input) `shouldBe` Right expected
 
 main :: IO ()
-main = hspec $ do
+main = hspec . parallel $ do
   describe "Year 2015" $ do
     it "Day 01.1" $ do test (2015, 01, 1) 138
     it "Day 01.2" $ do test (2015, 01, 2) 1771

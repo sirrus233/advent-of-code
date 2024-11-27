@@ -2,14 +2,14 @@ module Solutions.Y2015.Day08 (solution1, solution2) where
 
 -- https://adventofcode.com/2015/day/8
 
-import Advent (Parser, Solution)
-import Data.List.NonEmpty qualified as NE
+import Advent (Parser, Solution, lexeme)
+import Control.Applicative.Combinators.NonEmpty qualified as NE
 import Data.Text qualified as T
-import Text.Megaparsec (anySingleBut, chunk, eof, parse, try)
+import Text.Megaparsec (anySingleBut, chunk, parse, try)
 import Text.Megaparsec.Char (char, eol, hexDigitChar)
 
 parser1 :: Parser Int
-parser1 = sum <$> NE.some1 line <* eof
+parser1 = sum <$> NE.some (lexeme line)
   where
     quoteLit = 0 <$ char '\"' :: Parser Int
     backslash = 1 <$ chunk "\\\\" :: Parser Int
@@ -20,7 +20,7 @@ parser1 = sum <$> NE.some1 line <* eof
     line = sum <$> (quoteLit *> many stringChar <* quoteLit <* eol) :: Parser Int
 
 parser2 :: Parser Int
-parser2 = sum <$> NE.some1 line <* eof
+parser2 = sum <$> NE.some (lexeme line)
   where
     quoteLit = 3 <$ char '\"' :: Parser Int
     backslash = 4 <$ chunk "\\\\" :: Parser Int

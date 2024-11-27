@@ -3,11 +3,12 @@ module Solutions.Y2015.Day09 (solution1, solution2) where
 -- https://adventofcode.com/2015/day/9
 
 import Advent (Parser, Solution, lexeme, symbol)
+import Control.Applicative.Combinators.NonEmpty qualified as NE
 import Data.Foldable (maximum, minimum)
 import Data.HashMap.Strict qualified as Map
 import Data.HashSet qualified as Set
-import Text.Megaparsec (anySingle, manyTill, parse)
-import Text.Megaparsec.Char (spaceChar)
+import Text.Megaparsec (parse)
+import Text.Megaparsec.Char (letterChar)
 import Text.Megaparsec.Char.Lexer qualified as L
 
 type City = Text
@@ -17,9 +18,9 @@ type Distance = Int
 type Graph = HashMap City (HashMap City Distance)
 
 parser :: Parser Graph
-parser = buildGraph <$> many edge
+parser = buildGraph <$> NE.some edge
   where
-    city = lexeme $ toText <$> manyTill anySingle spaceChar :: Parser City
+    city = lexeme $ toText <$> some letterChar :: Parser City
     to = symbol "to" :: Parser Text
     equals = symbol "=" :: Parser Text
     dist = lexeme L.decimal :: Parser Distance
