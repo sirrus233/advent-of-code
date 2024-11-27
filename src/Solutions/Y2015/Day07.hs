@@ -63,16 +63,16 @@ simulate circuit
         probe' = flip probe circuit
         eval = maybe gate (Buffer . Value)
 
-solveForLabel :: Text -> Circuit -> Word16
-solveForLabel label = fromJust . probe (Label label) . simulate
+solveForLabel :: Text -> Circuit -> Maybe Word16
+solveForLabel label = probe (Label label) . simulate
 
-updateFromSteadyLabel :: Text -> Text -> Circuit -> Circuit
-updateFromSteadyLabel fromWire toWire circuit = Map.insert (Label toWire) (Buffer . Value $ updateSignal) circuit
+updateFromSteadyLabel :: Text -> Text -> Circuit -> Maybe Circuit
+updateFromSteadyLabel inWire outWire circuit = newCircuit <$> solveForLabel inWire circuit
   where
-    updateSignal = solveForLabel fromWire circuit
+    newCircuit signal = Map.insert (Label outWire) (Buffer . Value $ signal) circuit
 
 solution1 :: Solution Word16
-solution1 input = solveForLabel "a" <$> parse parser "" input
+solution1 input = fromJust . solveForLabel "a" <$> parse parser "" input
 
 solution2 :: Solution Word16
-solution2 input = solveForLabel "a" . updateFromSteadyLabel "a" "b" <$> parse parser "" input
+solution2 input = fromJust . (solveForLabel "a" <=< updateFromSteadyLabel "a" "b") <$> parse parser "" input

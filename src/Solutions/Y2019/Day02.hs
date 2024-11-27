@@ -38,10 +38,12 @@ execProgram = go 0
         readMem :: Address -> Int
         readMem = (NE.!!) p
         writeMem :: Address -> Int -> Program
-        writeMem addr a = NE.prependList (NE.take addr p) (a :| NE.drop (addr + 1) p)
+        writeMem addr a = case NE.splitAt addr p of
+          (_, []) -> p
+          (pre, _ : post) -> NE.prependList pre (a :| post)
 
 execAll :: Program -> NonEmpty Program
-execAll p = fromList [execProgram . initialize a b $ p | a <- [0 .. 99], b <- [0 .. 99]]
+execAll p = [execProgram . initialize a b $ p | a <- [0 .. 99], b <- [0 .. 99]]
 
 findTarget :: Int -> NonEmpty Program -> Maybe Int
 findTarget target programs = case NE.filter ((==) target . head) programs of
