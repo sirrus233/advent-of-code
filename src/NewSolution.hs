@@ -42,7 +42,7 @@ writeTemplate solutionId@(y, d, _) = writeFile path template
     parser = "parser :: Parser Int\nparser = pure 0\n\n"
     solutionFunction :: Int -> String
     solutionFunction n =
-      printf "solution%d :: Solution Int\nsolution%d input = const 0 <$> parse parser \"\" input\n" n n
+      printf "solution%d :: Solution Int\nsolution%d input = 0 <$ parse parser \"\" input\n" n n
 
 getExistingSolutions :: IO [SolutionId]
 getExistingSolutions = do
