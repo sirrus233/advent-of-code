@@ -1,4 +1,4 @@
-module Main (main) where
+module Test (main) where
 
 import Advent (AnySolution (..), Solution, SolutionId, readInput)
 import Data.HashMap.Strict qualified as Map
@@ -52,6 +52,8 @@ main = hspec . parallel $ do
     it "Day 11.2" $ do testS (2015, 11, 2) "vzcaabcc"
     it "Day 12.1" $ do testN (2015, 12, 1) 191164
     it "Day 12.2" $ do testN (2015, 12, 2) 87842
+    it "Day 13.1" $ do testN (2015, 13, 1) 733
+    it "Day 13.2" $ do testN (2015, 13, 2) 725
   describe "Year 2019" $ do
     it "Day 01.1" $ do testN (2019, 01, 1) 3184233
     it "Day 01.2" $ do testN (2019, 01, 2) 4773483
