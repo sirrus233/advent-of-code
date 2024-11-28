@@ -26,6 +26,9 @@ common common-dependencies
         parser-combinators ^>=1.3.0,
         megaparsec ^>=9.6.1,
         cryptohash-md5 ^>=0.11.100.1,
+        aeson ^>=2.2.3.0,
+        scientific ^>=0.3.8.0,
+        vector ^>=0.13.2.0,
 
     mixins:              
         base hiding (Prelude),
@@ -57,6 +60,7 @@ library
                       Solutions.Y2019.Day01,
                       Solutions.Y2015.Day10,
                       Solutions.Y2015.Day11,
+                      Solutions.Y2015.Day12,
     hs-source-dirs:   src
 
 executable advent-of-code

@@ -50,6 +50,8 @@ main = hspec . parallel $ do
     it "Day 10.2" $ do testN (2015, 10, 2) 3579328
     it "Day 11.1" $ do testS (2015, 11, 1) "vzbxxyzz"
     it "Day 11.2" $ do testS (2015, 11, 2) "vzcaabcc"
+    it "Day 12.1" $ do testN (2015, 12, 1) 191164
+    it "Day 12.2" $ do testN (2015, 12, 2) 87842
   describe "Year 2019" $ do
     it "Day 01.1" $ do testN (2019, 01, 1) 3184233
     it "Day 01.2" $ do testN (2019, 01, 2) 4773483

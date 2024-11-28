@@ -12,6 +12,7 @@ import Solutions.Y2015.Day08 qualified as Y2015_08
 import Solutions.Y2015.Day09 qualified as Y2015_09
 import Solutions.Y2015.Day10 qualified as Y2015_10
 import Solutions.Y2015.Day11 qualified as Y2015_11
+import Solutions.Y2015.Day12 qualified as Y2015_12
 import Solutions.Y2019.Day01 qualified as Y2019_01
 import Solutions.Y2019.Day02 qualified as Y2019_02
 
@@ -39,6 +40,8 @@ solutions =
     ((2015, 10, 2), AnySolution Y2015_10.solution2),
     ((2015, 11, 1), AnySolution Y2015_11.solution1),
     ((2015, 11, 2), AnySolution Y2015_11.solution2),
+    ((2015, 12, 1), AnySolution Y2015_12.solution1),
+    ((2015, 12, 2), AnySolution Y2015_12.solution2),
     ((2019, 01, 1), AnySolution Y2019_01.solution1),
     ((2019, 01, 2), AnySolution Y2019_01.solution2),
     ((2019, 02, 1), AnySolution Y2019_02.solution1),
