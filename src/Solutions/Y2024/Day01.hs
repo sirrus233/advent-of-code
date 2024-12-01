@@ -11,7 +11,7 @@ import Text.Megaparsec.Char.Lexer qualified as L
 type Pair = (Int, Int)
 
 parser :: Parser [Pair]
-parser = many ((,) <$> lexeme L.decimal <*> lexeme L.decimal)
+parser = many $ (,) <$> lexeme L.decimal <*> lexeme L.decimal
 
 solution1 :: Solution Int
 solution1 input = sum . uncurry (zipWith (\a b -> abs (a - b))) . bimap sort sort . unzip <$> parse parser "" input
