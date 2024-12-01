@@ -4,7 +4,6 @@ module Solutions.Y2024.Day01 (solution1, solution2) where
 
 import Advent (Parser, Solution, lexeme)
 import Data.HashMap.Strict (findWithDefault)
-import Data.HashMap.Strict qualified as Map
 import Text.Megaparsec (parse)
 import Text.Megaparsec.Char.Lexer qualified as L
 
@@ -19,5 +18,5 @@ solution1 input = sum . uncurry (zipWith (\a b -> abs (a - b))) . bimap sort sor
 solution2 :: Solution Int
 solution2 input = sum . (\(as, bs) -> map (\a -> a * count a bs) as) . second counter . unzip <$> parse parser "" input
   where
-    counter xs = Map.fromList . map (\x -> (x, length . filter (== x) $ xs)) $ xs
+    counter xs = fromList . map (\x -> (x, length . filter (== x) $ xs)) $ xs
     count = findWithDefault 0
