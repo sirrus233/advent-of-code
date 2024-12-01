@@ -17,6 +17,7 @@ import Solutions.Y2015.Day13 qualified as Y2015_13
 import Solutions.Y2015.Day14 qualified as Y2015_14
 import Solutions.Y2019.Day01 qualified as Y2019_01
 import Solutions.Y2019.Day02 qualified as Y2019_02
+import Solutions.Y2024.Day01 qualified as Y2024_01
 
 solutions :: HashMap SolutionId AnySolution
 solutions =
@@ -51,5 +52,7 @@ solutions =
     ((2019, 01, 1), AnySolution Y2019_01.solution1),
     ((2019, 01, 2), AnySolution Y2019_01.solution2),
     ((2019, 02, 1), AnySolution Y2019_02.solution1),
-    ((2019, 02, 2), AnySolution Y2019_02.solution2)
+    ((2019, 02, 2), AnySolution Y2019_02.solution2),
+    ((2024, 01, 1), AnySolution Y2024_01.solution1),
+    ((2024, 01, 2), AnySolution Y2024_01.solution2)
   ]
