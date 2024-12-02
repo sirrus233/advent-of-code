@@ -9,7 +9,7 @@ import Text.Megaparsec.Char.Lexer qualified as L
 
 data Direction = Decrease | Increase deriving (Eq)
 
-data MetaData = MetaData {prevVal :: Maybe Int, prevDir :: Maybe Direction, mistakes :: Int}
+data MetaData = MetaData {prevVal :: Maybe Int, mistakes :: Int}
 
 parser :: Parser [[Int]]
 parser = (L.decimal `sepEndBy1` char ' ') `sepEndBy1` char '\n'
@@ -21,23 +21,19 @@ direction a b
   | otherwise = Nothing
 
 isSafe :: Int -> [Int] -> Bool
-isSafe limit = go (MetaData {prevVal = Nothing, prevDir = Nothing, mistakes = 0})
+isSafe limit = go (MetaData {prevVal = Nothing, mistakes = 0})
   where
     go :: MetaData -> [Int] -> Bool
     go (MetaData {mistakes}) [] = mistakes <= limit
     go (MetaData {mistakes}) [_] = mistakes <= limit
-    go md@(MetaData {prevVal, prevDir, mistakes}) (a : b : ns)
+    go (MetaData {mistakes}) [a, b] = mistakes <= limit && a /= b && abs (a - b) <= 3
+    go md@(MetaData {mistakes}) (a : b : c : ns)
       | mistakes > limit = False
-      | isMistake = go dropThis (b : ns) || go dropNext (a : ns)
-      | otherwise = go ok (b : ns)
+      | isValid = go md (b : c : ns)
+      | otherwise = go invalidMd (b : c : ns) || go invalidMd (a : c : ns) || go invalidMd (a : b : ns)
       where
-        dir = direction a b
-        isMistake = abs (a - b) > 3 || isNothing dir || (isJust prevVal && isNothing prevDir) || (isJust prevDir && dir /= prevDir)
-        ok = md {prevVal = Just a, prevDir = dir}
-        dropThis = case prevVal of
-          Nothing -> md {mistakes = mistakes + 1}
-          Just p -> md {prevDir = direction p b, mistakes = mistakes + 1}
-        dropNext = md {mistakes = mistakes + 1}
+        isValid = a /= b && abs (a - b) <= 3 && direction a b == direction b c
+        invalidMd = md {mistakes = mistakes + 1}
 
 solution1 :: Solution Int
 solution1 input = length . filter (isSafe 0) <$> parse parser "" input
