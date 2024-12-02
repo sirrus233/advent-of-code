@@ -5,8 +5,7 @@ module Solutions.Y2015.Day14 (solution1, solution2) where
 import Advent (Parser, Solution, lexeme)
 import Control.Applicative.Combinators.NonEmpty qualified as NE
 import Data.Char (isDigit)
-import Data.Foldable (maximum)
-import Data.List.NonEmpty qualified as NE
+import Data.Foldable1 (maximum)
 import Text.Megaparsec (parse, takeWhileP)
 import Text.Megaparsec.Char.Lexer qualified as L
 
@@ -14,30 +13,49 @@ data ReindeerState = Flying | Resting
 
 type Position = Int
 
-data ReindeerStats = ReindeerStats Speed Time Time
+type Score = Int
 
 type Speed = Int
 
 type Time = Int
 
-data Reindeer = Reindeer ReindeerState Position ReindeerStats
+data Reindeer = Reindeer
+  { reinState :: ReindeerState,
+    tRemain :: Time,
+    pos :: Position,
+    score :: Score,
+    fSpeed :: Speed,
+    fTime :: Time,
+    rTime :: Time
+  }
+
+mkReindeer :: Int -> Int -> Int -> Reindeer
+mkReindeer fSpeed fTime rTime = Reindeer {reinState = Flying, tRemain = fTime, pos = 0, score = 0, fSpeed, fTime, rTime}
 
 parser :: Parser (NonEmpty Reindeer)
-parser = fmap (Reindeer Flying 0) <$> NE.some (ReindeerStats <$> nextInt <*> nextInt <*> nextInt)
+parser = NE.some (mkReindeer <$> nextInt <*> nextInt <*> nextInt)
   where
     text = lexeme $ takeWhileP Nothing (not . isDigit) :: Parser Text
     nextInt = text *> lexeme L.decimal <* text :: Parser Int
 
-evalReindeer :: Time -> Reindeer -> Int
-evalReindeer t (Reindeer Resting pos stats@(ReindeerStats _ _ restTime))
-  | t <= restTime = pos
-  | otherwise = evalReindeer (t - restTime) (Reindeer Flying pos stats)
-evalReindeer t (Reindeer Flying pos stats@(ReindeerStats speed flyTime _))
-  | t <= flyTime = pos + (speed * t)
-  | otherwise = evalReindeer (t - flyTime) (Reindeer Resting (pos + (speed * flyTime)) stats)
+updateReindeer :: Reindeer -> Reindeer
+updateReindeer r@(Reindeer {reinState, tRemain, pos, score = _, fSpeed, fTime, rTime}) = case reinState of
+  Resting | tRemain > 1 -> r {tRemain = tRemain - 1}
+  Resting -> r {reinState = Flying, tRemain = fTime}
+  Flying | tRemain > 1 -> r {tRemain = tRemain - 1, pos = pos + fSpeed}
+  Flying -> r {reinState = Resting, tRemain = rTime, pos = pos + fSpeed}
+
+evalReindeer :: Time -> NonEmpty Reindeer -> NonEmpty Reindeer
+evalReindeer t rs
+  | t == 0 = rs
+  | otherwise = evalReindeer (t - 1) scoredReindeer
+  where
+    updatedReindeer = fmap updateReindeer rs
+    bestPos = maximum . fmap pos $ updatedReindeer
+    scoredReindeer = fmap (\r -> if pos r == bestPos then r {score = score r + 1} else r) updatedReindeer
 
 solution1 :: Solution Int
-solution1 input = maximum . NE.map (evalReindeer 2503) <$> parse parser "" input
+solution1 input = maximum . fmap pos . evalReindeer 2503 <$> parse parser "" input
 
 solution2 :: Solution Int
-solution2 input = 0 <$ parse parser "" input
+solution2 input = maximum . fmap score . evalReindeer 2503 <$> parse parser "" input
