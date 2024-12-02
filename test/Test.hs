@@ -64,3 +64,5 @@ main = hspec . parallel $ do
   describe "Year 2024" $ do
     it "Day 01.1" $ do testN (2024, 01, 1) 2769675
     it "Day 01.2" $ do testN (2024, 01, 2) 24643097
+    it "Day 02.1" $ do testN (2024, 02, 1) 490
+    it "Day 02.2" $ do testN (2024, 02, 2) 0
