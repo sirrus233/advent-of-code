@@ -11,7 +11,7 @@ parser :: Parser [[Int]]
 parser = (L.decimal `sepEndBy1` char ' ') `sepEndBy1` char '\n'
 
 isSafe :: [Int] -> Bool
-isSafe = liftA2 (&&) isSafeMagnitude isSafeDirection . (zip <*> drop 1)
+isSafe = ((&&) <$> isSafeMagnitude <*> isSafeDirection) . (zip <*> drop 1)
   where
     isSafeMagnitude = all (\(a, b) -> a /= b && abs (a - b) <= 3)
     isSafeDirection = (||) <$> all (uncurry (<)) <*> all (uncurry (>))
