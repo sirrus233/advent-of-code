@@ -5,6 +5,7 @@
         "bimap",
         "Combinators",
         "concat",
+        "Dont",
         "elems",
         "flipfoldl",
         "fmap",
