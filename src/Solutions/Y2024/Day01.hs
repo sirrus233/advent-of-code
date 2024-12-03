@@ -15,6 +15,11 @@ solution1 :: Solution Int
 solution1 input = sum . uncurry (zipWith (\a b -> abs (a - b))) . bimap sort sort . unzip <$> parse parser "" input
 
 solution2 :: Solution Int
-solution2 input = sum . (\(as, bs) -> map (\a -> a * count a bs) as) . unzip <$> parse parser "" input
+solution2 input = uncurry go . bimap sort sort . unzip <$> parse parser "" input
   where
-    count a = length . filter (== a)
+    go :: [Int] -> [Int] -> Int
+    go [] _ = 0
+    go left@(x : _) right = (x * length ns * length count) + go as bs
+      where
+        (ns, as) = span (== x) left
+        (count, bs) = span (== x) . dropWhile (< x) $ right
