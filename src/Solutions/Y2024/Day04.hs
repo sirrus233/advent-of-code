@@ -35,25 +35,27 @@ nextChar :: Char -> Char
 nextChar 'X' = 'M'
 nextChar 'M' = 'A'
 nextChar 'A' = 'S'
-nextChar c = c
+nextChar _ = '_'
 
 searchXmas :: WordSearch -> Point -> Int
 searchXmas ws point = case lookup point ws of
   Nothing -> 0
-  Just c | c /= 'X' -> 0
-  Just _ -> sum . map (go point 'X') $ [DUp, DDown, DLeft, DRight, DUpLeft, DUpRight, DDownLeft, DDownRight]
+  Just c | c == 'X' -> sum . map (go point 'X') $ [DUp, DDown, DLeft, DRight, DUpLeft, DUpRight, DDownLeft, DDownRight]
+  _ -> 0
   where
     go _ 'S' _ = 1
-    go p c d = case lookup (nextPoint d p) ws of
+    go p c d = case lookup p' ws of
       Nothing -> 0
-      Just c' | c' == nextChar c -> go (nextPoint d p) (nextChar c) d
+      Just c' | c' == nextChar c -> go p' c' d
       _ -> 0
+      where
+        p' = nextPoint d p
 
 searchMasX :: WordSearch -> Point -> Int
 searchMasX ws point = case lookup point ws of
   Nothing -> 0
   Just c | c == 'A' && isMas diag1 && isMas diag2 -> 1
-  Just _ -> 0
+  _ -> 0
   where
     diag1 = (lookup (nextPoint DUpLeft point) ws, lookup (nextPoint DDownRight point) ws)
     diag2 = (lookup (nextPoint DDownLeft point) ws, lookup (nextPoint DUpRight point) ws)
