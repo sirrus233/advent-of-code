@@ -54,19 +54,20 @@ library
                       Solutions.Y2015.Day05,
                       Solutions.Y2015.Day06,
                       Solutions.Y2015.Day07,
-                      Solutions.Y2019.Day02,
                       Solutions.Y2015.Day08,
                       Solutions.Y2015.Day09,
-                      Solutions.Y2019.Day01,
                       Solutions.Y2015.Day10,
                       Solutions.Y2015.Day11,
                       Solutions.Y2015.Day12,
                       Solutions.Y2015.Day13,
                       Solutions.Y2015.Day14,
+                      Solutions.Y2019.Day01,
+                      Solutions.Y2019.Day02,
                       Solutions.Y2024.Day01,
                       Solutions.Y2024.Day02,
                       Solutions.Y2024.Day03,
                       Solutions.Y2024.Day04,
+                      Solutions.Y2024.Day05,
     hs-source-dirs:   src
 
 executable advent-of-code
