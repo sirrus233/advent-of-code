@@ -35,7 +35,11 @@ isOrdered :: RuleBook -> Pages -> Bool
 isOrdered rb ps = ps == sortBy (pageOrder rb) ps
 
 solution1 :: Solution Int
-solution1 input = sum . map middlePage . (\(rb, ps) -> filter (isOrdered rb) ps) <$> parse parser "" input
+solution1 input = sum . map middlePage . uncurry orderedPages <$> parse parser "" input
+  where
+    orderedPages rb = filter (isOrdered rb)
 
 solution2 :: Solution Int
-solution2 input = sum . map middlePage . (\(rb, ps) -> map (sortBy (pageOrder rb)) . filter (not . isOrdered rb) $ ps) <$> parse parser "" input
+solution2 input = sum . map middlePage . uncurry sortedFromUnorderedPages <$> parse parser "" input
+  where
+    sortedFromUnorderedPages rb = map (sortBy (pageOrder rb)) . filter (not . isOrdered rb)
