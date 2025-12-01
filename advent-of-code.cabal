@@ -1,86 +1,93 @@
-cabal-version:      3.4
-name:               advent-of-code
-version:            0.1.0.0
-synopsis:           Solutions to puzzles from https://adventofcode.com
+cabal-version: 3.4
+name: advent-of-code
+version: 0.1.0.0
+synopsis: Solutions to puzzles from https://adventofcode.com
 -- description:
-license:            BSD-2-Clause
-license-file:       LICENSE
-author:             Bradley Sherman
-maintainer:         sirrus233@gmail.com
+license: BSD-2-Clause
+license-file: LICENSE
+author: Bradley Sherman
+maintainer: sirrus233@gmail.com
 -- copyright:
-build-type:         Simple
-extra-doc-files:    CHANGELOG.md
--- extra-source-files:
+build-type: Simple
+extra-doc-files: CHANGELOG.md
 
+-- extra-source-files:
 common common-options
-    ghc-options: -Wall
-    default-language: GHC2024
+  ghc-options: -Wall
+  default-language: GHC2024
 
 common common-dependencies
-    build-depends:
-        base,
-        relude,
-        directory,
-        http-conduit,
-        optparse-applicative,
-        parser-combinators,
-        megaparsec,
-        cryptohash-md5,
-        aeson,
-        scientific,
-        vector,
+  build-depends:
+    aeson,
+    base,
+    cryptohash-md5,
+    directory,
+    http-conduit,
+    megaparsec,
+    optparse-applicative,
+    parser-combinators,
+    relude,
+    scientific,
+    vector,
 
-    mixins:              
-        base hiding (Prelude),
-        relude (Relude as Prelude),
-        relude,
+  mixins:
+    base hiding (Prelude),
+    relude (Relude as Prelude),
+    relude,
 
 common common-extensions
-    default-extensions:
-        MonadComprehensions,
-        OverloadedLists,
-        OverloadedRecordDot,
-        OverloadedStrings,
+  default-extensions:
+    MonadComprehensions
+    OverloadedLists
+    OverloadedRecordDot
+    OverloadedStrings
 
 library
-    import:           common-options, common-dependencies, common-extensions
-    exposed-modules:  Advent,
-                      NewSolution,
-                      Solutions.All,
-                      Solutions.Y2015.Day01,
-                      Solutions.Y2015.Day02,
-                      Solutions.Y2015.Day03,
-                      Solutions.Y2015.Day04,
-                      Solutions.Y2015.Day05,
-                      Solutions.Y2015.Day06,
-                      Solutions.Y2015.Day07,
-                      Solutions.Y2015.Day08,
-                      Solutions.Y2015.Day09,
-                      Solutions.Y2015.Day10,
-                      Solutions.Y2015.Day11,
-                      Solutions.Y2015.Day12,
-                      Solutions.Y2015.Day13,
-                      Solutions.Y2015.Day14,
-                      Solutions.Y2019.Day01,
-                      Solutions.Y2019.Day02,
-                      Solutions.Y2024.Day01,
-                      Solutions.Y2024.Day02,
-                      Solutions.Y2024.Day03,
-                      Solutions.Y2024.Day04,
-                      Solutions.Y2024.Day05,
-    hs-source-dirs:   src
+  import: common-options, common-dependencies, common-extensions
+  exposed-modules:
+    Advent
+    NewSolution
+    Solutions.All
+    Solutions.Y2015.Day01
+    Solutions.Y2015.Day02
+    Solutions.Y2015.Day03
+    Solutions.Y2015.Day04
+    Solutions.Y2015.Day05
+    Solutions.Y2015.Day06
+    Solutions.Y2015.Day07
+    Solutions.Y2015.Day08
+    Solutions.Y2015.Day09
+    Solutions.Y2015.Day10
+    Solutions.Y2015.Day11
+    Solutions.Y2015.Day12
+    Solutions.Y2015.Day13
+    Solutions.Y2015.Day14
+    Solutions.Y2019.Day01
+    Solutions.Y2019.Day02
+    Solutions.Y2024.Day01
+    Solutions.Y2024.Day02
+    Solutions.Y2024.Day03
+    Solutions.Y2024.Day04
+    Solutions.Y2024.Day05
+    Solutions.Y2025.Day01
+
+  hs-source-dirs: src
 
 executable advent-of-code
-    import:           common-options, common-dependencies, common-extensions
-    main-is:          Main.hs
-    hs-source-dirs:   app
-    build-depends:    advent-of-code
+  import: common-options, common-dependencies, common-extensions
+  main-is: Main.hs
+  hs-source-dirs: app
+  build-depends: advent-of-code
 
 test-suite advent-of-code-test
-    import:           common-options, common-dependencies, common-extensions
-    type:             exitcode-stdio-1.0
-    hs-source-dirs:   test
-    ghc-options:      -threaded -with-rtsopts=-N
-    main-is:          Test.hs
-    build-depends:    hspec,
-                      advent-of-code
+  import: common-options, common-dependencies, common-extensions
+  type: exitcode-stdio-1.0
+  hs-source-dirs: test
+  ghc-options:
+    -threaded
+    -with-rtsopts=-N
+
+  main-is: Test.hs
+  build-depends:
+    advent-of-code,
+    hspec,
