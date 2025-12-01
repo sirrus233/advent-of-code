@@ -18,17 +18,17 @@ common common-options
 
 common common-dependencies
     build-depends:
-        base ^>=4.20.0.0,
-        relude ^>=1.2.1.0,
-        directory ^>=1.3.9.0,
-        http-conduit ^>=2.3.9,
-        optparse-applicative ^>=0.18.1.0,
-        parser-combinators ^>=1.3.0,
-        megaparsec ^>=9.6.1,
-        cryptohash-md5 ^>=0.11.100.1,
-        aeson ^>=2.2.3.0,
-        scientific ^>=0.3.8.0,
-        vector ^>=0.13.2.0,
+        base,
+        relude,
+        directory,
+        http-conduit,
+        optparse-applicative,
+        parser-combinators,
+        megaparsec,
+        cryptohash-md5,
+        aeson,
+        scientific,
+        vector,
 
     mixins:              
         base hiding (Prelude),
@@ -82,5 +82,5 @@ test-suite advent-of-code-test
     hs-source-dirs:   test
     ghc-options:      -threaded -with-rtsopts=-N
     main-is:          Test.hs
-    build-depends:    hspec ^>=2.11.9,
+    build-depends:    hspec,
                       advent-of-code

@@ -11,7 +11,7 @@ import Solutions.All (solutions)
 data Opts = Opts {year :: Year, day :: Day, problem :: Problem, new :: Bool} deriving (Show)
 
 maxYear :: Year
-maxYear = 2024
+maxYear = 2025
 
 optsParser :: ParserInfo Opts
 optsParser = Opt.info (parseOpts <**> Opt.helper) Opt.fullDesc
