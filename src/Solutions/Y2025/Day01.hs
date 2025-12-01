@@ -5,12 +5,12 @@ module Solutions.Y2025.Day01 (solution1, solution2) where
 import Advent (Parser, Solution, lexeme)
 import Control.Applicative.Combinators.NonEmpty qualified as NE
 import Text.Megaparsec (parse)
-import Text.Megaparsec.Char (letterChar)
+import Text.Megaparsec.Char (char)
 import Text.Megaparsec.Char.Lexer (decimal)
 
--- data Direction = R | L TODO
+data Direction = L | R
 
-data Instruction = Instruction Char Int
+data Instruction = Instruction Direction Int
 
 type DialStart = Int
 
@@ -21,7 +21,10 @@ type IncrCount = Int
 type Protocol = DialStart -> DialEnd -> IncrCount
 
 parser :: Parser (NonEmpty Instruction)
-parser = fmap (uncurry Instruction) <$> NE.some (lexeme ((,) <$> letterChar <*> decimal))
+parser = NE.some $ lexeme pInstr
+  where
+    pDir = L <$ char 'L' <|> R <$ char 'R' :: Parser Direction
+    pInstr = Instruction <$> pDir <*> decimal :: Parser Instruction
 
 protocolSimple :: Protocol
 protocolSimple _ end = fromEnum (end `mod` 100 == 0)
@@ -39,9 +42,8 @@ next :: Protocol -> (Int, Int) -> Instruction -> (Int, Int)
 next protocol (p, zs) (Instruction c i) = (p' `mod` 100, zs')
   where
     p' = case c of
-      'R' -> p + i
-      'L' -> p - i
-      _ -> error "Invalid Char" -- TODO
+      R -> p + i
+      L -> p - i
     zs' = zs + protocol p p'
 
 solution1 :: Solution Int
