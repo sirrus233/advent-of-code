@@ -19,6 +19,9 @@ test solutionId expected = do
 testN :: SolutionId -> Int -> Expectation
 testN = test
 
+testL :: SolutionId -> Integer -> Expectation
+testL = test
+
 testW :: SolutionId -> Word16 -> Expectation
 testW = test
 
@@ -75,3 +78,5 @@ main = hspec . parallel $ do
   describe "Year 2025" $ do
     it "Day 01.1" $ do testN (2025, 01, 1) 1026
     it "Day 01.2" $ do testN (2025, 01, 2) 5923
+    it "Day 02.1" $ do testL (2025, 02, 1) 8576933996
+    it "Day 02.2" $ do testL (2025, 02, 2) 25663320831
