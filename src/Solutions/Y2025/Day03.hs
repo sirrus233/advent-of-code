@@ -8,26 +8,29 @@ import Data.List.NonEmpty qualified as NE
 import Text.Megaparsec (parse)
 import Text.Megaparsec.Char (digitChar)
 
-type Battery = Int
+type Battery = Integer
 
-type Joltage = Int
+type Joltage = Integer
 
 type Bank = NonEmpty Battery
 
 parser :: Parser (NonEmpty Bank)
-parser = NE.some1 . lexeme . NE.some1 $ digitToInt <$> digitChar
+parser = NE.some1 . lexeme . NE.some1 $ fromIntegral . digitToInt <$> digitChar
 
-maxJoltage :: Bank -> Joltage
-maxJoltage bs = toJoltage . foldl' updateBest (0, 0) $ zip (toList bs) (tail bs)
+maxJoltage :: Int -> Bank -> Joltage
+maxJoltage winSize bs = toJoltage . foldl' updateFromWindow initialJoltage $ windows
   where
-    updateBest (a, b) (i, j)
-      | i > a = (i, j)
-      | j > b = (a, j)
-      | otherwise = (a, b)
-    toJoltage (a, b) = 10 * a + b
+    initialJoltage = replicate winSize 0
+    windows = getZipList . traverse ZipList . take winSize . tails . toList $ bs
+    updateFromWindow [] [] = []
+    updateFromWindow (j : js) (w : ws)
+      | w > j = w : ws
+      | otherwise = j : updateFromWindow js ws
+    updateFromWindow _ _ = error "Size mismatch between result array and sliding window."
+    toJoltage as = sum [10 ^ i * a | (i, a) <- zip [0 :: Integer ..] (reverse as)]
 
-solution1 :: Solution Int
-solution1 input = sum . fmap maxJoltage <$> parse parser "" input
+solution1 :: Solution Integer
+solution1 input = sum . fmap (maxJoltage 2) <$> parse parser "" input
 
-solution2 :: Solution Int
-solution2 input = 0 <$ parse parser "" input
+solution2 :: Solution Integer
+solution2 input = sum . fmap (maxJoltage 12) <$> parse parser "" input
