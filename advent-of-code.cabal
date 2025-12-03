@@ -71,6 +71,7 @@ library
     Solutions.Y2024.Day05
     Solutions.Y2025.Day01
     Solutions.Y2025.Day02
+    Solutions.Y2025.Day03
 
   hs-source-dirs: src
 

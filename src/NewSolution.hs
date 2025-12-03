@@ -82,8 +82,8 @@ writeCabal :: SolutionId -> IO ()
 writeCabal (y, d, _) = readFileBS path >>= (writeFileText path . cabalContents) . decodeUtf8
   where
     path = "advent-of-code.cabal"
-    newEntry = toText $ replicate 22 ' ' <> printf "Solutions.Y%d.Day%s,\n" y (dayString d)
-    cabalContents = (\(pre, post) -> pre <> newEntry <> post) . breakOn "    hs-source-dirs:   src"
+    newEntry = toText $ replicate 4 ' ' <> printf "Solutions.Y%d.Day%s\n" y (dayString d)
+    cabalContents = (\(pre, post) -> pre <> newEntry <> post) . breakOn "  hs-source-dirs: src"
 
 newSolution :: SolutionId -> IO ()
 newSolution solutionId = do
