@@ -26,7 +26,6 @@ maxJoltage bs = toJoltage . foldl' updateBest (0, 0) $ zip (toList bs) (tail bs)
       | otherwise = (a, b)
     toJoltage (a, b) = 10 * a + b
 
--- 818181911112111
 solution1 :: Solution Int
 solution1 input = sum . fmap maxJoltage <$> parse parser "" input
 
