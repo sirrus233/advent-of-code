@@ -82,3 +82,5 @@ main = hspec . parallel $ do
     it "Day 02.2" $ do testL (2025, 02, 2) 25663320831
     it "Day 03.1" $ do testL (2025, 03, 1) 17443
     it "Day 03.2" $ do testL (2025, 03, 2) 172167155440541
+    it "Day 04.1" $ do testN (2025, 04, 1) 1508
+    it "Day 04.2" $ do testN (2025, 04, 2) 8538
