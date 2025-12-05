@@ -22,19 +22,21 @@ parser = (,) <$> NE.some1 pRange <* eol <*> NE.some1 (lexeme decimal)
 countValidFoodIds :: NonEmpty Range -> NonEmpty FoodId -> Int
 countValidFoodIds rs = sum . fmap (fromEnum . (\fid -> any (`inRange` fid) rs))
 
-flattenRs :: NonEmpty Range -> NonEmpty Range
-flattenRs (r :| []) = [r]
-flattenRs (r1@(a1, b1) :| r2@(a2, b2) : rs)
-  | b1 < a2 = r1 <| flattenRs (r2 :| rs)
-  | a1 < a2 && b1 <= b2 = (a1, a2 - 1) <| flattenRs (r2 :| rs)
-  | a1 <= a2 && b1 > b2 = flattenRs (r1 :| rs)
-  | otherwise = flattenRs (r2 :| rs)
-
 countRange :: Range -> Integer
 countRange (a, b) = b - a + 1
+
+flattenRs :: NonEmpty Range -> NonEmpty Range
+flattenRs = go . NE.sort
+  where
+    go (r :| []) = [r]
+    go (r1@(a1, b1) :| r2@(a2, b2) : rs)
+      | b1 < a2 = r1 <| flattenRs (r2 :| rs)
+      | a1 < a2 && b1 <= b2 = (a1, a2 - 1) <| flattenRs (r2 :| rs)
+      | a1 <= a2 && b1 > b2 = flattenRs (r1 :| rs)
+      | otherwise = flattenRs (r2 :| rs)
 
 solution1 :: Solution Int
 solution1 input = uncurry countValidFoodIds <$> parse parser "" input
 
 solution2 :: Solution Integer
-solution2 input = sum . fmap countRange . flattenRs . NE.sort . fst <$> parse parser "" input
+solution2 input = sum . fmap countRange . flattenRs . fst <$> parse parser "" input
