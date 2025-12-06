@@ -12,6 +12,7 @@
         "foldl",
         "foldr",
         "Hashable",
+        "hspace",
         "Hspec",
         "Joltage",
         "LSHIFT",

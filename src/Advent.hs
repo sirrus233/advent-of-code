@@ -1,7 +1,7 @@
 module Advent where
 
 import Text.Megaparsec (ParseErrorBundle, ParsecT)
-import Text.Megaparsec.Char (space1)
+import Text.Megaparsec.Char (hspace1, space1)
 import Text.Megaparsec.Char.Lexer qualified as L
 
 type Year = Int
@@ -32,6 +32,9 @@ spaceConsumer = L.space space1 empty empty
 
 lexeme :: Parser a -> Parser a
 lexeme = L.lexeme spaceConsumer
+
+lexemeH :: Parser a -> Parser a
+lexemeH = L.lexeme $ L.space hspace1 empty empty
 
 symbol :: Text -> Parser Text
 symbol = L.symbol spaceConsumer
