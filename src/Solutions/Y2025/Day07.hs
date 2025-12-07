@@ -44,8 +44,17 @@ beamManifold (s, end, splitters) = go [s]
       | (x, y + 1) `Set.member` splitters = (1, [(x - 1, y + 1), (x + 1, y + 1)])
       | otherwise = (0, [(x, y + 1)])
 
+quantumBeamManifold :: (Start, End, Splitters) -> Splits
+quantumBeamManifold (s, end, splitters) = go s
+  where
+    go :: Beam -> Splits
+    go (x, y)
+      | y == end = 1
+      | not . Set.member (x, y + 1) $ splitters = go (x, y + 1)
+      | otherwise = go (x - 1, y + 1) + go (x + 1, y + 1)
+
 solution1 :: Solution Int
 solution1 input = beamManifold <$> parse parser "" input
 
 solution2 :: Solution Int
-solution2 input = 0 <$ parse parser "" input
+solution2 input = quantumBeamManifold <$> parse parser "" input
