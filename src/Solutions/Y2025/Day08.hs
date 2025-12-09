@@ -43,4 +43,17 @@ solution1 input =
     <$> parse parser "" input
 
 solution2 :: Solution Integer
-solution2 input = 0 <$ parse parser "" input
+solution2 input =
+  (\((x1, _, _), (x2, _, _)) -> x1 * x2)
+    . snd
+    . head
+    . fromList
+    . dropWhile ((> 1) . length . fst)
+    . dropWhile ((<= 1) . length . fst)
+    . ( \ps ->
+          scanl' (\(network, _) p -> (attach network p, p)) (fmap one ps, ((0, 0, 0), (0, 0, 0)))
+            . sortWith (uncurry distance)
+            . pairs
+            $ ps
+      )
+    <$> parse parser "" input
